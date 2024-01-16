@@ -13,6 +13,7 @@ parser = ArgumentParser()
 parser.add_argument("--duration", '-d', type=float, default=100)
 parser.add_argument("--audio_file", '-a')
 parser.add_argument("--text_file", '-t')
+parser.add_argument("--model", '-m', default='tiny')
 args = parser.parse_args()
 
 def digit_to_string(match):
@@ -34,12 +35,11 @@ def seconds_to_hh_mm_ss_ms(seconds):
 
     return formatted_time
 
-device = "cuda" 
-audio_file = "Mustache.wav"
+device = "cuda"
 batch_size = 4 # reduce if low on GPU mem
 compute_type = "int8" # change to "int8" if low on GPU mem (may reduce accuracy)
 
-model = whisperx.load_model("medium", device, compute_type=compute_type, language='en')
+model = whisperx.load_model(args.model, device, compute_type=compute_type, language='en')
 model_a, metadata = whisperx.load_align_model(language_code='en', device=device)
 def main():
     audio_file = Path(args.audio_file)
